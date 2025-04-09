@@ -26,28 +26,52 @@ describe("Lessons Component...", () => {
     render(<Lessons lessons={mockLessons} />);
     expect(screen.getByText(/6 lessons available:/i)).toBeInTheDocument();
   });
-});
-test("displays a list of all the lesson titles for a given unit as H3 elements", async () => {
-  render(<Lessons lessons={mockLessons} />);
-  const lessonTitles = mockLessons.map((lesson) => lesson.title);
-  for (const lessonTitle of lessonTitles) {
-    const heading = screen.getByRole("heading", {
-      level: 3,
-      name: lessonTitle,
-    });
-    expect(heading).toBeInTheDocument();
-  }
-});
 
-test("displays the learning objectives for each lesson", async () => {
-  render(<Lessons lessons={mockLessons} />);
-  const learningObjectives = mockLessons
-    .filter((lesson) => lesson.learningObjectives.length > 0)
-    .flatMap((lesson) => lesson.learningObjectives);
+  test("displays a list of all the lesson titles for a given unit as H3 elements", async () => {
+    render(<Lessons lessons={mockLessons} />);
+    const lessonTitles = mockLessons.map((lesson) => lesson.title);
+    for (const lessonTitle of lessonTitles) {
+      const heading = screen.getByRole("heading", {
+        level: 3,
+        name: lessonTitle,
+      });
+      expect(heading).toBeInTheDocument();
+    }
+  });
 
-  for (const objective of learningObjectives) {
-    expect(screen.getByText(objective)).toBeInTheDocument();
-  }
+  test("displays the learning objectives for each lesson", async () => {
+    render(<Lessons lessons={mockLessons} />);
+    const learningObjectives = mockLessons
+      .filter((lesson) => lesson.learningObjectives.length > 0)
+      .flatMap((lesson) => lesson.learningObjectives);
+
+    for (const objective of learningObjectives) {
+      expect(screen.getByText(objective)).toBeInTheDocument();
+    }
+  });
+
+  test("sorts lessons by orderInUnit if available, otherwise by recommendedOrderInUnit", async () => {
+    render(<Lessons lessons={mockLessons} />);
+
+    // Get all rendered lesson titles in order
+    const renderedLessonTitles = screen
+      .getAllByRole("heading", { level: 3 })
+      .map((heading) => heading.textContent);
+
+    const expectedOrder = [
+      // Sorted according to orderInUnit and recommendedOrderInUnit
+      // and then alphabetically by title
+      "Applying trigonometry",
+      "Calculating angles with sine",
+      "Using the sine rule",
+      "Use tangent to find a length",
+      "Use sine and cosine to find a length",
+      "Know tangent, sine and cosine",
+    ];
+
+    // Assert that the rendered lesson titles match the sorted lesson titles
+    expect(renderedLessonTitles).toEqual(expectedOrder);
+  });
 });
 
 const mockUnitInfo = {

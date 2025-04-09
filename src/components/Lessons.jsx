@@ -2,9 +2,13 @@ export function Lessons({ lessons }) {
   const lessonCount = lessons.length;
   //   some lessons have orderInUnit and some have recommendedOrderInUnit
   //  sort by orderinUnit if it exists, otherwise sort by recommendedOrderInUnit
+  // if they're the same then sort alphabetically by title
   const lessonsInOrder = lessons.sort((a, b) => {
-    const aOrder = a.orderInUnit || a.recommendedOrderInUnit;
-    const bOrder = b.orderInUnit || b.recommendedOrderInUnit;
+    const aOrder = a.orderInUnit ?? a.recommendedOrderInUnit ?? 0;
+    const bOrder = b.orderInUnit ?? b.recommendedOrderInUnit ?? 0;
+    if (aOrder === bOrder) {
+      return a.title.localeCompare(b.title);
+    }
     return aOrder - bOrder;
   });
   return (

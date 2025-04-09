@@ -26,7 +26,6 @@ function Unit({ unitId }) {
       setLessons(lessonsData);
       setLoading(false);
     } catch (error) {
-      console.error("Error fetching unit and lessons info:", error);
       setError("Error fetching unit and lessons info");
       setLoading(false);
     }
@@ -35,8 +34,6 @@ function Unit({ unitId }) {
   useEffect(() => {
     fetchUnitAndLessons();
   }, [fetchUnitAndLessons, unitId]);
-  console.log(unitInfo);
-  console.log(lessons);
 
   if (loading) return <p>Loading...</p>;
   if (error) return <p>{error}</p>;
