@@ -1,4 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
+import { UnitInfo } from "./components/UnitInfo";
+import { Lessons } from "./components/Lessons";
 
 function Unit({ unitId }) {
   const [unitInfo, setUnitInfo] = useState(null);
@@ -6,7 +8,6 @@ function Unit({ unitId }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  
   const fetchUnitAndLessons = useCallback(async () => {
     try {
       const [unitResponse, lessonsResponse] = await Promise.all([
@@ -36,12 +37,14 @@ function Unit({ unitId }) {
   }, [fetchUnitAndLessons, unitId]);
   console.log(unitInfo);
   console.log(lessons);
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
     <>
-      {loading && <p>loading...</p>}
-      {error && <p>{error}</p>}
-      <h1>{unitInfo && unitInfo.title}</h1>
-      <p>{lessons && lessons.length}</p>
+      {unitInfo && <UnitInfo info={unitInfo} />}
+      {lessons && <Lessons lessons={lessons} />}
     </>
   );
 }
